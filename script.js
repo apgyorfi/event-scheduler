@@ -24,7 +24,14 @@ END:VEVENT
 END:VCALENDAR`.trim();
 
     const blob = new Blob([icsContent], { type: 'text/calendar' });
-    const fileName = eventName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    const normalizeString = (str) => {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    };
+
+    const fileName = normalizeString(eventName)
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, '') 
+        .replace(/\s+/g, '-');  
     
     document.getElementById('downloadICS').onclick = function() {
         const link = document.createElement('a');
